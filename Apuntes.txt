@@ -145,10 +145,4 @@ qm set 100 --hookscript local:snippets/desktopHooksct.pl
 qm set 101 --hookscript local:snippets/desktopHooksct.pl
 qm set 102 --hookscript local:snippets/desktopHooksct.pl
 
-
-
-  01101110
-  11111000
-
-
-  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
+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
