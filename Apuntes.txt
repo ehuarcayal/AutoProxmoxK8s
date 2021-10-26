@@ -1,0 +1,154 @@
+sudo virt-customize -a focal-server-cloudimg-amd64-qemu.img --install qemu-guest-agent
+
+qm create 9000 --name "ubuntu-template" --memory 2048 --net0 virtio,bridge=vmbr0
+qm importdisk 9000 /var/lib/vz/template/iso/focal-server-cloudimg-amd64-qemu.img k8s
+qm set 9000 --scsihw virtio-scsi-pci --scsi0 k8s:9000/vm-9000-disk-0.raw
+qm set 9000 --ide2 k8s:cloudinit
+qm set 9000 --boot c --bootdisk scsi0
+qm set 9000 --serial0 socket --vga serial0
+qm template 9000
+
+qm clone 9000 321 --name testUbuntuCloudInit
+qm set 321 --sshkey ~/.ssh/id_rsa.pub
+qm set 321 --ipconfig0 ip=192.168.3.101/24,gw=192.168.3.1
+qm start 321
+
+qm stop 321
+qm destroy 321
+ssh ubuntu@192.168.3.101
+
+
+tp link wr720n
+Router: 192.168.3.150
+TokerId: userTerraform@pam!token_id
+Secret: dc2339d9-401f-46c7-b89a-ec67711c1a29
+
+https://github.com/NatiSayada/k3s-proxmox-terraform-ansible
+https://buildvirtual.net/deploy-a-kubernetes-cluster-using-ansible/
+
+ANSIBLE:
+--------
+ansible-playbook site.yml -i inventory/hosts.ini
+ansible all -i inventory/hosts.ini -m ping
+ansible all -i /media/erickrog/DATOS/Programas/Automatizacion/Terraform-Kubernetes/inventory/hosts.ini -m ping
+
+ansible-inventory -i inventory/hosts.ini --list -y
+
+ssh-keygen -f /home/erickrog/.ssh/known_hosts -R 192.168.3.111
+ssh-keygen -f /home/erickrog/.ssh/known_hosts -R 192.168.3.121
+
+export ANSIBLE_CONFIG=/media/erickrog/DATOS/Programas/Automatizacion/Terraform-Kubernetes/ansible/ansible.cfg
+
+ansible-playbook -i inventory/hosts.ini ansible/users.yml
+ansible-playbook -i inventory/hosts.ini ansible/install-k8s.yml
+ansible-playbook -i inventory/hosts.ini ansible/master.yml --user=root --extra-vars "ansible_sudo_pass=Peru123."
+ansible-playbook -i inventory/hosts.ini ansible/join-workers.yml
+
+ssh ubuntu@192.168.3.111
+
+ansible-playbook -i inventory/hosts.ini cluster.yml --user=root --extra-vars "ansible_sudo_pass=Peru123."
+ansible-playbook -i inventory/hosts.ini test.yml --user=root --extra-vars "ansible_sudo_pass=Peru123."
+scp ubuntu@192.168.3.128:/home/kube/.kube/config ~/.kube/config
+
+
+scp "/media/erickrog/DATOS/Maquinas Virtuales/osx_BigSur/OSX-KVM/OpenCore-Catalina/OpenCore.qcow2" root@192.168.3.99:/var/lib/macos/images/
+
+scp "/media/erickrog/DATOS/Maquinas Virtuales/osx_BigSur/OSX-KVM/mac_hdd_ng.img" root@192.168.3.99:/var/lib/macos/images/
+
+
+
+vm-200-disk-0.qcow2
+
+grub line:
+nano /etc/default/grub
+update-grub
+GRUB_CMDLINE_LINUX_DEFAULT="quiet intel_iommu=on iommu=pt video=efifb:off"
+
+
+lspci -k | grep NVID -C3
+lspci -tvv
+lspci -nnk
+
+
+echo 1 > /sys/bus/pci/devices/0000\:00\:03.0/remove
+echo 1 > /sys/bus/pci/rescan
+
+
+echo 0 > /sys/class/vtconsole/vtcon0/bind
+echo 0 > /sys/class/vtconsole/vtcon1/bind
+echo efi-framebuffer.0 > /sys/bus/platform/drivers/efi-framebuffer/unbind
+
+
+modprobe -r vfio-pci
+modprobe nouveau
+
+echo 1 > /sys/class/vtconsole/vtcon0/bind
+nvidia-xconfig --query-gpu-info > /dev/null 2>&1
+echo "efi-framebuffer.0" > /sys/bus/platform/drivers/efi-framebuffer/bind
+
+
+
+modprobe nvidiafb
+modprobe nouveau
+
+03:00.0 VGA compatible controller [0300]: NVIDIA Corporation GK208B [GeForce GT 710] [10de:128b] (rev a1)
+        Subsystem: Micro-Star International Co., Ltd. [MSI] GK208B [GeForce GT 710] [1462:8c93]
+        Kernel modules: nvidiafb, nouveau
+03:00.1 Audio device [0403]: NVIDIA Corporation GK208 HDMI/DP Audio Controller [10de:0e0f] (rev a1)
+        Subsystem: Micro-Star International Co., Ltd. [MSI] GK208 HDMI/DP Audio Controller [1462:8c93]
+        Kernel driver in use: snd_hda_intel
+        Kernel modules: snd_hda_intel
+
+
+03:00.0 VGA compatible controller [0300]: NVIDIA Corporation GK208B [GeForce GT 710] [10de:128b] (rev a1)
+        Subsystem: Micro-Star International Co., Ltd. [MSI] GK208B [GeForce GT 710] [1462:8c93]
+        Kernel driver in use: vfio-pci
+        Kernel modules: nvidiafb, nouveau
+03:00.1 Audio device [0403]: NVIDIA Corporation GK208 HDMI/DP Audio Controller [10de:0e0f] (rev a1)
+        Subsystem: Micro-Star International Co., Ltd. [MSI] GK208 HDMI/DP Audio Controller [1462:8c93]
+        Kernel driver in use: vfio-pci
+        Kernel modules: snd_hda_intel
+
+
+
+
+
+03:00.0 VGA compatible controller: NVIDIA Corporation GK208B [GeForce GT 710] (rev a1) (prog-if 00 [VGA controller])
+        Subsystem: Micro-Star International Co., Ltd. [MSI] GK208B [GeForce GT 710]
+        Flags: bus master, fast devsel, latency 0, IRQ 10, IOMMU group 19
+        Memory at f9000000 (32-bit, non-prefetchable) [size=16M]
+        Memory at e0000000 (64-bit, prefetchable) [size=128M]
+        Memory at ee000000 (64-bit, prefetchable) [size=32M]
+        I/O ports at 9f00 [size=128]
+        Expansion ROM at 000c0000 [virtual] [disabled] [size=128K]
+        Capabilities: [60] Power Management version 3
+        Capabilities: [68] MSI: Enable- Count=1/1 Maskable- 64bit+
+        Capabilities: [78] Express Legacy Endpoint, MSI 00
+        Capabilities: [100] Virtual Channel
+        Capabilities: [128] Power Budgeting <?>
+        Capabilities: [600] Vendor Specific Information: ID=0001 Rev=1 Len=024 <?>
+        Kernel modules: nvidiafb, nouveau
+
+03:00.1 Audio device: NVIDIA Corporation GK208 HDMI/DP Audio Controller (rev a1)
+        Subsystem: Micro-Star International Co., Ltd. [MSI] GK208 HDMI/DP Audio Controller
+        Flags: bus master, fast devsel, latency 0, IRQ 17, IOMMU group 19
+        Memory at faffc000 (32-bit, non-prefetchable) [size=16K]
+        Capabilities: [60] Power Management version 3
+        Capabilities: [68] MSI: Enable- Count=1/1 Maskable- 64bit+
+        Capabilities: [78] Express Endpoint, MSI 00
+        Kernel driver in use: snd_hda_intel
+        Kernel modules: snd_hda_intel
+
+nano /var/lib/vz/snippets/desktopHooksct.pl
+nano /etc/pve/qemu-server/100.conf
+qm set 100 --hookscript local:snippets/desktopHooksct.pl
+qm set 101 --hookscript local:snippets/desktopHooksct.pl
+qm set 102 --hookscript local:snippets/desktopHooksct.pl
+
+
+
+  01101110
+  11111000
+
+
+  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
