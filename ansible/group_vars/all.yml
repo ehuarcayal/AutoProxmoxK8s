@@ -4,7 +4,7 @@ pod_network_cidr:  "10.244.0.0/16"
 
 # Additional feature to install
 additional_features:
-  helm: false
+  helm: true
   metallb: true
 
 # helm Variables

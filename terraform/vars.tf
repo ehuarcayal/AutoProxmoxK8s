@@ -7,7 +7,7 @@ variable "proxmox_host" {
 }
 
 variable "nameCluster" {
-    default = "k8s"
+    default = "devK8S"
 }
 
 variable "masters" {
