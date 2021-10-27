@@ -18,8 +18,8 @@ variable "masters" {
     "ram" = 4096
     "disco" = "15G"
     "plantilla" = "ubuntu-template"
-    "ssh_key" = "~/.ssh/id_rsa.pub"
-    "ssh_key_ansible" = "~/.ssh/id_rsa"
+    #"ssh_key" = "~/.ssh/id_rsa.pub"
+    #"ssh_key_ansible" = "~/.ssh/id_rsa"
     "user_host" = "ubuntu"
   }
 }
@@ -32,8 +32,8 @@ variable "workers" {
     "ram" = 2048
     "disco" = "15G"
     "plantilla" = "ubuntu-template"
-    "ssh_key" = "~/.ssh/id_rsa.pub"
-    "ssh_key_ansible" = "~/.ssh/id_rsa"
+    #"ssh_key" = "~/.ssh/id_rsa.pub"
+    #"ssh_key_ansible" = "~/.ssh/id_rsa"
     "user_host" = "ubuntu"
   }
 }

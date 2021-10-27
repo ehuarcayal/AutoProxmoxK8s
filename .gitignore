@@ -36,3 +36,6 @@ terraform.rc
 
 #Inventario autogenerado en terraform
 *.ini
+
+#Claves generadas por terraform
+*.ssh

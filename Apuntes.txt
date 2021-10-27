@@ -36,8 +36,10 @@ ansible-inventory -i inventory/hosts.ini --list -y
 
 ssh-keygen -f /home/erickrog/.ssh/known_hosts -R 192.168.3.111
 ssh-keygen -f /home/erickrog/.ssh/known_hosts -R 192.168.3.121
+ssh-keygen -f ~/.ssh/known_hosts -R 192.168.3.128
 
 export ANSIBLE_CONFIG=/media/erickrog/DATOS/Programas/Automatizacion/Terraform-Kubernetes/ansible/ansible.cfg
+export ANSIBLE_CONFIG=/media/Repositorios/AutoProxmoxK8s/ansible/ansible.cfg
 
 ansible-playbook -i inventory/hosts.ini ansible/users.yml
 ansible-playbook -i inventory/hosts.ini ansible/install-k8s.yml
@@ -48,11 +50,13 @@ ssh ubuntu@192.168.3.111
 
 ansible-playbook -i inventory/hosts.ini cluster.yml --user=root --extra-vars "ansible_sudo_pass=Peru123."
 ansible-playbook -i inventory/hosts.ini test.yml --user=root --extra-vars "ansible_sudo_pass=Peru123."
+
+ansible-playbook -i inventory/hosts.ini cluster.yml --user=root --extra-vars "ansible_sudo_pass=12345"
+
 scp ubuntu@192.168.3.128:/home/kube/.kube/config ~/.kube/config
 
 
 scp "/media/erickrog/DATOS/Maquinas Virtuales/osx_BigSur/OSX-KVM/OpenCore-Catalina/OpenCore.qcow2" root@192.168.3.99:/var/lib/macos/images/
-
 scp "/media/erickrog/DATOS/Maquinas Virtuales/osx_BigSur/OSX-KVM/mac_hdd_ng.img" root@192.168.3.99:/var/lib/macos/images/
 
 
@@ -69,75 +73,12 @@ lspci -k | grep NVID -C3
 lspci -tvv
 lspci -nnk
 
-
 echo 1 > /sys/bus/pci/devices/0000\:00\:03.0/remove
 echo 1 > /sys/bus/pci/rescan
-
-
 echo 0 > /sys/class/vtconsole/vtcon0/bind
 echo 0 > /sys/class/vtconsole/vtcon1/bind
 echo efi-framebuffer.0 > /sys/bus/platform/drivers/efi-framebuffer/unbind
-
-
-modprobe -r vfio-pci
-modprobe nouveau
-
-echo 1 > /sys/class/vtconsole/vtcon0/bind
-nvidia-xconfig --query-gpu-info > /dev/null 2>&1
-echo "efi-framebuffer.0" > /sys/bus/platform/drivers/efi-framebuffer/bind
-
-
-
-modprobe nvidiafb
-modprobe nouveau
-
-03:00.0 VGA compatible controller [0300]: NVIDIA Corporation GK208B [GeForce GT 710] [10de:128b] (rev a1)
-        Subsystem: Micro-Star International Co., Ltd. [MSI] GK208B [GeForce GT 710] [1462:8c93]
-        Kernel modules: nvidiafb, nouveau
-03:00.1 Audio device [0403]: NVIDIA Corporation GK208 HDMI/DP Audio Controller [10de:0e0f] (rev a1)
-        Subsystem: Micro-Star International Co., Ltd. [MSI] GK208 HDMI/DP Audio Controller [1462:8c93]
-        Kernel driver in use: snd_hda_intel
-        Kernel modules: snd_hda_intel
-
-
-03:00.0 VGA compatible controller [0300]: NVIDIA Corporation GK208B [GeForce GT 710] [10de:128b] (rev a1)
-        Subsystem: Micro-Star International Co., Ltd. [MSI] GK208B [GeForce GT 710] [1462:8c93]
-        Kernel driver in use: vfio-pci
-        Kernel modules: nvidiafb, nouveau
-03:00.1 Audio device [0403]: NVIDIA Corporation GK208 HDMI/DP Audio Controller [10de:0e0f] (rev a1)
-        Subsystem: Micro-Star International Co., Ltd. [MSI] GK208 HDMI/DP Audio Controller [1462:8c93]
-        Kernel driver in use: vfio-pci
-        Kernel modules: snd_hda_intel
-
-
-
-
-
-03:00.0 VGA compatible controller: NVIDIA Corporation GK208B [GeForce GT 710] (rev a1) (prog-if 00 [VGA controller])
-        Subsystem: Micro-Star International Co., Ltd. [MSI] GK208B [GeForce GT 710]
-        Flags: bus master, fast devsel, latency 0, IRQ 10, IOMMU group 19
-        Memory at f9000000 (32-bit, non-prefetchable) [size=16M]
-        Memory at e0000000 (64-bit, prefetchable) [size=128M]
-        Memory at ee000000 (64-bit, prefetchable) [size=32M]
-        I/O ports at 9f00 [size=128]
-        Expansion ROM at 000c0000 [virtual] [disabled] [size=128K]
-        Capabilities: [60] Power Management version 3
-        Capabilities: [68] MSI: Enable- Count=1/1 Maskable- 64bit+
-        Capabilities: [78] Express Legacy Endpoint, MSI 00
-        Capabilities: [100] Virtual Channel
-        Capabilities: [128] Power Budgeting <?>
-        Capabilities: [600] Vendor Specific Information: ID=0001 Rev=1 Len=024 <?>
-        Kernel modules: nvidiafb, nouveau
-
-03:00.1 Audio device: NVIDIA Corporation GK208 HDMI/DP Audio Controller (rev a1)
-        Subsystem: Micro-Star International Co., Ltd. [MSI] GK208 HDMI/DP Audio Controller
-        Flags: bus master, fast devsel, latency 0, IRQ 17, IOMMU group 19
-        Memory at faffc000 (32-bit, non-prefetchable) [size=16K]
-        Capabilities: [60] Power Management version 3
-        Capabilities: [68] MSI: Enable- Count=1/1 Maskable- 64bit+
-        Capabilities: [78] Express Endpoint, MSI 00
-        Kernel driver in use: snd_hda_intel
-        Kernel modules: snd_hda_intel
+modprobe -r vfio-pc
 
 nano /var/lib/vz/snippets/desktopHooksct.pl
 nano /etc/pve/qemu-server/100.conf
@@ -146,3 +87,7 @@ qm set 101 --hookscript local:snippets/desktopHooksct.pl
 qm set 102 --hookscript local:snippets/desktopHooksct.pl
 
 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
+
+ssh -i /media/Repositorios/AutoProxmoxK8s/terraform/.ssh/id_rsa ubuntu@192.168.3.128
+ssh -i /root/AutoProxmoxK8s/terraform/.ssh/id_rsa ubuntu@192.168.3.128
+stat -c "%a %n" id_rsa
