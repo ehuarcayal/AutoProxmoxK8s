@@ -8,9 +8,9 @@ terraform {
 }
 
 provider "proxmox" {
-  pm_api_url = "https://192.168.3.99:8006/api2/json"
-  pm_api_token_id = "userTerraform@pam!token_id"
-  pm_api_token_secret = "dc2339d9-401f-46c7-b89a-ec67711c1a29"
+  pm_api_url = var.proxmox["URL"]
+  pm_api_token_id = var.proxmox["token_id"]
+  pm_api_token_secret = var.proxmox["token_secret"]
   pm_tls_insecure = true
 }
 
@@ -35,7 +35,7 @@ resource "random_string" "random" {
 resource "proxmox_vm_qemu" "k8s_master" {
   count = var.masters["numInstancias"]  
   name = join("-", ["${var.nameCluster}", "mst", "${random_string.random[count.index ].id}" ])  
-  target_node = var.proxmox_host
+  target_node = var.proxmox["target"]
   clone = var.masters["plantilla"]
   agent = 1
   os_type = "cloud-init"
@@ -66,13 +66,13 @@ resource "proxmox_vm_qemu" "k8s_master" {
   }
     
   ipconfig0 = join("", ["ip=", "${cidrhost(var.red["subnet"], count.index )}", "/" ,"${var.red["mask"]}", ",gw=", "${var.red["gateway"]}"]) 
-  sshkeys = tls_private_key.ssh_keys.public_key_openssh #file("${var.masters["ssh_key"]}")
+  sshkeys = tls_private_key.ssh_keys.public_key_openssh
 }
 
 resource "proxmox_vm_qemu" "k8s_worker" {
   count = var.workers["numInstancias"]
   name = join("-", ["${var.nameCluster}", "wrk", "${random_string.random[ var.masters["numInstancias"] + count.index ].id}"])    
-  target_node = var.proxmox_host
+  target_node = var.proxmox["target"]
   clone = var.workers["plantilla"]
   agent = 1
   os_type = "cloud-init"
@@ -103,7 +103,7 @@ resource "proxmox_vm_qemu" "k8s_worker" {
   }
     
   ipconfig0 = join("", ["ip=", "${cidrhost(var.red["subnet"], var.masters["numInstancias"] + count.index )}", "/" ,"${var.red["mask"]}", ",gw=", "${var.red["gateway"]}"]) 
-  sshkeys = tls_private_key.ssh_keys.public_key_openssh #file("${var.workers["ssh_key"]}")
+  sshkeys = tls_private_key.ssh_keys.public_key_openssh
   
 }
 

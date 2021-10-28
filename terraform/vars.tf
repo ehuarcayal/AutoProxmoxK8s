@@ -2,8 +2,14 @@ variable "storageProxmox" {
     default = "k8s"
 }
 
-variable "proxmox_host" {
-    default = "server1"
+variable "proxmox" {
+    type = map
+    default = {
+      "target"        : "server1"
+      "URL"           : "https://192.168.3.99:8006/api2/json"
+      "token_id"      : "userTerraform@pam!token_id"
+      "token_secret"  : "dc2339d9-401f-46c7-b89a-ec67711c1a29"
+    }
 }
 
 variable "nameCluster" {
@@ -18,8 +24,6 @@ variable "masters" {
     "ram" = 4096
     "disco" = "15G"
     "plantilla" = "ubuntu-template"
-    #"ssh_key" = "~/.ssh/id_rsa.pub"
-    #"ssh_key_ansible" = "~/.ssh/id_rsa"
     "user_host" = "ubuntu"
   }
 }
@@ -32,8 +36,6 @@ variable "workers" {
     "ram" = 2048
     "disco" = "15G"
     "plantilla" = "ubuntu-template"
-    #"ssh_key" = "~/.ssh/id_rsa.pub"
-    #"ssh_key_ansible" = "~/.ssh/id_rsa"
     "user_host" = "ubuntu"
   }
 }
