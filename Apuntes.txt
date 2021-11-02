@@ -37,13 +37,15 @@ ansible-inventory -i inventory/hosts.ini --list -y
 ssh-keygen -f /home/erickrog/.ssh/known_hosts -R 192.168.3.111
 ssh-keygen -f /home/erickrog/.ssh/known_hosts -R 192.168.3.121
 ssh-keygen -f ~/.ssh/known_hosts -R 192.168.3.128
+ssh-keygen -f ~/.ssh/known_hosts -R 192.168.3.129
+ssh-keygen -f ~/.ssh/known_hosts -R 192.168.3.130
 
 export ANSIBLE_CONFIG=/media/erickrog/DATOS/Programas/Automatizacion/Terraform-Kubernetes/ansible/ansible.cfg
 export ANSIBLE_CONFIG=/media/Repositorios/AutoProxmoxK8s/ansible/ansible.cfg
 
 ansible-playbook -i inventory/hosts.ini ansible/users.yml
 ansible-playbook -i inventory/hosts.ini ansible/install-k8s.yml
-ansible-playbook -i inventory/hosts.ini ansible/master.yml --user=root --extra-vars "ansible_sudo_pass=Peru123."
+ansible-playbook -i inventory/hosts.ini master.yml --user=root --extra-vars "ansible_sudo_pass=Peru123."
 ansible-playbook -i inventory/hosts.ini ansible/join-workers.yml
 
 ssh ubuntu@192.168.3.111
@@ -53,7 +55,7 @@ ansible-playbook -i inventory/hosts.ini test.yml --user=root --extra-vars "ansib
 
 ansible-playbook -i inventory/hosts.ini cluster.yml --user=root --extra-vars "ansible_sudo_pass=12345"
 
-scp ubuntu@192.168.3.128:/home/kube/.kube/config ~/.kube/config
+scp -i /media/erickrog/DATOS/Programas/Automatizacion/AutoProxmoxK8s/terraform/.ssh/id_rsa ubuntu@192.168.3.128:/home/kube/.kube/config ~/.kube/config
 
 
 scp "/media/erickrog/DATOS/Maquinas Virtuales/osx_BigSur/OSX-KVM/OpenCore-Catalina/OpenCore.qcow2" root@192.168.3.99:/var/lib/macos/images/
@@ -89,5 +91,6 @@ qm set 102 --hookscript local:snippets/desktopHooksct.pl
 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
 
 ssh -i /media/Repositorios/AutoProxmoxK8s/terraform/.ssh/id_rsa ubuntu@192.168.3.128
+ssh -i /media/erickrog/DATOS/Programas/Automatizacion/AutoProxmoxK8s/terraform/.ssh/id_rsa ubuntu@192.168.3.128
 ssh -i /root/AutoProxmoxK8s/terraform/.ssh/id_rsa ubuntu@192.168.3.128
 stat -c "%a %n" id_rsa

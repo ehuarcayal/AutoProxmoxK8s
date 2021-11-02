@@ -6,13 +6,13 @@
   with_items:
     - acl         
 
-- name: initialize the cluster
+- name: Initialize the cluster
   shell: kubeadm init --pod-network-cidr={{ pod_network_cidr }}
   args:
     chdir: $HOME
     creates: cluster_initialized.txt
     
-- name: create .kube directory
+- name: Create .kube directory
   become: yes
   become_user: kube
   file:
@@ -20,14 +20,14 @@
     state: directory
     mode: 0755
 
-- name: copies admin.conf to user's kube config
+- name: Copies admin.conf to user's kube config
   copy:
     src: /etc/kubernetes/admin.conf
     dest: /home/kube/.kube/config
     remote_src: yes
     owner: kube
 
-- name: install Pod network
+- name: Install Pod network
   become: yes
   become_user: kube
   shell: kubectl apply -f https://docs.projectcalico.org/manifests/calico.yaml 

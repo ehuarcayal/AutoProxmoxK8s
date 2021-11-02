@@ -2,6 +2,13 @@
 kube_version: 1.20.1-00
 pod_network_cidr:  "10.244.0.0/16"
 
+#Runtime: containerd or crio or docker
+runtime_type: docker
+
+#CRIO Version
+crio_version: "1.20"
+crio_os: "xUbuntu_20.04"
+
 # Additional feature to install
 additional_features:
   helm: false

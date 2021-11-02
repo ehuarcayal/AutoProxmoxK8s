@@ -1,0 +1,37 @@
+---
+- name: Common task runtime
+  include_tasks: "common.yml"
+
+- name: Add Repository libcontainer
+  copy:
+    dest: "/etc/apt/sources.list.d/devel:kubic:libcontainers:stable.list"
+    content: |
+      deb https://download.opensuse.org/repositories/devel:/kubic:/libcontainers:/stable/{{ crio_os }}/ /      
+
+- name: Add Repository crio
+  copy:
+    dest: "/etc/apt/sources.list.d/devel:kubic:libcontainers:stable:cri-o:{{ crio_version }}.list"
+    content: |
+      deb https://download.opensuse.org/repositories/devel:/kubic:/libcontainers:/stable:/cri-o:/{{ crio_version }}/{{ crio_os }}/ /
+
+- name: Install and configure dependencies
+  shell: |
+          curl -L https://download.opensuse.org/repositories/devel:/kubic:/libcontainers:/stable/{{ crio_os }}/Release.key | sudo apt-key --keyring /etc/apt/trusted.gpg.d/libcontainers.gpg add -
+          curl -L https://download.opensuse.org/repositories/devel:kubic:libcontainers:/stable:/cri-o:/{{ crio_version }}/{{ crio_os }}/Release.key | sudo apt-key --keyring /etc/apt/trusted.gpg.d/libcontainers-cri-o.gpg add -
+
+- name: Install and Start CRI-o 
+  shell: |
+          sudo apt-get update && sudo apt-get -y install cri-o cri-o-runc          
+
+- name: Driver Cgroup
+  copy: 
+    dest: /etc/crio/crio.conf.d/02-cgroup-manager.conf
+    content: |
+      [crio.runtime]
+      conmon_cgroup = "pod"
+      cgroup_manager = "cgroupfs"
+
+- name: Start CRI-o
+  shell: |         
+          sudo systemctl enable cri-o.service
+          sudo systemctl start cri-o.service

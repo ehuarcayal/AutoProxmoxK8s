@@ -1,0 +1,33 @@
+---
+- name: Create {{ runtime_type }} config file
+  file:
+    path: "/etc/modules-load.d/{{ runtime_type }}.conf"
+    state: "touch"
+
+- name: Add conf for {{ runtime_type }}
+  blockinfile:
+    path: "/etc/modules-load.d/{{ runtime_type }}.conf"
+    block: |
+          overlay
+          br_netfilter
+
+- name: modprobe
+  shell: |
+          sudo modprobe overlay
+          sudo modprobe br_netfilter
+
+- name: Set system configurations for Kubernetes networking
+  file:
+    path: "/etc/sysctl.d/99-kubernetes-cri.conf"
+    state: "touch"
+
+- name: Add conf for {{ runtime_type }}
+  blockinfile:
+    path: "/etc/sysctl.d/99-kubernetes-cri.conf"
+    block: |
+          net.bridge.bridge-nf-call-iptables = 1
+          net.ipv4.ip_forward = 1
+          net.bridge.bridge-nf-call-ip6tables = 1
+
+- name: Apply new settings
+  command: sudo sysctl --system

@@ -12,7 +12,8 @@
   gather_facts: yes
   connection: ssh
   roles:
-    - role: k8sinstall
+    - role: container
+    - role: kubeadm
 
 - hosts: master
   become: yes

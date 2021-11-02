@@ -1,0 +1,10 @@
+---
+- name: Common task runtime
+  include_tasks: "common.yml"
+
+- name: install containerd
+  shell: |
+          sudo apt-get update && sudo apt-get install -y containerd
+          sudo mkdir -p /etc/containerd
+          sudo containerd config default | sudo tee /etc/containerd/config.toml
+          sudo systemctl restart containerd
