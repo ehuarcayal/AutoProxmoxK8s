@@ -54,6 +54,7 @@ ansible-playbook -i inventory/hosts.ini cluster.yml --user=root --extra-vars "an
 ansible-playbook -i inventory/hosts.ini test.yml --user=root --extra-vars "ansible_sudo_pass=Peru123."
 
 ansible-playbook -i inventory/hosts.ini cluster.yml --user=root --extra-vars "ansible_sudo_pass=12345"
+ansible-playbook -i inventory/hosts.ini cluster.yml
 
 scp -i /media/erickrog/DATOS/Programas/Automatizacion/AutoProxmoxK8s/terraform/.ssh/id_rsa ubuntu@192.168.3.128:/home/kube/.kube/config ~/.kube/config
 
@@ -94,3 +95,6 @@ ssh -i /media/Repositorios/AutoProxmoxK8s/terraform/.ssh/id_rsa ubuntu@192.168.3
 ssh -i /media/erickrog/DATOS/Programas/Automatizacion/AutoProxmoxK8s/terraform/.ssh/id_rsa ubuntu@192.168.3.128
 ssh -i /root/AutoProxmoxK8s/terraform/.ssh/id_rsa ubuntu@192.168.3.128
 stat -c "%a %n" id_rsa
+
+https://tansanrao.com/kubernetes-ha-cluster-with-kubeadm/
+https://www.lisenet.com/2021/install-and-configure-a-multi-master-ha-kubernetes-cluster-with-kubeadm-haproxy-and-keepalived-on-centos-7/
