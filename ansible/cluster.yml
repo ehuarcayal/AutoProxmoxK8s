@@ -1,4 +1,14 @@
 ---
+- hosts: haproxy
+  remote_user: ubuntu
+  become: yes
+  become_method: sudo
+  become_user: root
+  gather_facts: yes
+  connection: ssh
+  roles:
+    - role: haproxy
+    
 - hosts: k8s_cluster
   become: yes
   roles:

@@ -16,11 +16,23 @@ variable "nameCluster" {
     default = "devK8S"
 }
 
+variable "HAProxy" {
+  type = map
+  default = {
+    "numInstancias"  = 1
+    "cores" = 1
+    "ram" = 1024
+    "disco" = "8G"
+    "plantilla" = "ubuntu-template"
+    "user_host" = "ubuntu"
+  }
+}
+
 variable "masters" {
   type = map
   default = {
-    "numInstancias"  = 1 
-    "cores" = 4
+    "numInstancias"  = 1
+    "cores" = 2
     "ram" = 4096
     "disco" = "15G"
     "plantilla" = "ubuntu-template"

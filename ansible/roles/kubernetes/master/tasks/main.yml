@@ -42,5 +42,5 @@
 
 - name: Add Token in Host dummy
   add_host:
-    name:   "K8S_TOKEN"
-    token:  "{{ kubernetes_join_command.stdout }}"      
+    name: "K8S_TOKEN"
+    token: "{{ kubernetes_join_command.stdout }}"      

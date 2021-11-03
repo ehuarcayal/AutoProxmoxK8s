@@ -1,0 +1,17 @@
+---
+- name: Install HAProxy
+  apt:
+    name:
+      - haproxy
+
+- name: Modify haproxy.cfg with template
+  blockinfile:
+    path: /etc/haproxy/haproxy.cfg
+    block: |
+      {{ lookup('file', '../templates/haproxy.j2') }}
+
+- name: Restart HAProxy
+  systemd:
+    name: haproxy
+    state: restarted
+    daemon_reload: yes

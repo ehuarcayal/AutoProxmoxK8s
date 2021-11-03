@@ -1,3 +1,6 @@
+[haproxy]
+${k8s_haproxy_ip}
+
 [master]
 ${k8s_master_ip}
 
