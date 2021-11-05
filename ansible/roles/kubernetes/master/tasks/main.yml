@@ -6,11 +6,12 @@
   with_items:
     - acl         
 
-- name: Initialize the cluster
-  shell: kubeadm init --pod-network-cidr={{ pod_network_cidr }}
+- name: Initialize the cluster"
+  shell: kubeadm init --pod-network-cidr={{ pod_network_cidr }} --control-plane-endpoint {{ hostvars[groups["haproxy"][0]]["ansible_eth0"]["ipv4"]["address"] if groups["haproxy"] | length > 0 else hostvars[inventory_hostname]["ansible_default_ipv4"]["address"] }}
   args:
     chdir: $HOME
     creates: cluster_initialized.txt
+  when: inventory_hostname == groups['master'][0]
     
 - name: Create .kube directory
   become: yes
@@ -19,6 +20,7 @@
     path: $HOME/.kube
     state: directory
     mode: 0755
+  when: inventory_hostname == groups['master'][0]
 
 - name: Copies admin.conf to user's kube config
   copy:
@@ -26,6 +28,7 @@
     dest: /home/kube/.kube/config
     remote_src: yes
     owner: kube
+  when: inventory_hostname == groups['master'][0]
 
 - name: Install Pod network
   become: yes
@@ -33,14 +36,41 @@
   shell: kubectl apply -f https://docs.projectcalico.org/manifests/calico.yaml 
   args:
     chdir: $HOME
-    
+  when: inventory_hostname == groups['master'][0]
+
+- name: Get the certificate-key for joining the master nodes
+  shell: kubeadm init phase upload-certs --upload-certs | tail -1
+  register: kubernetes_cert_key
+  when: inventory_hostname == groups['master'][0]
+
+- name: Get the token for joining the master nodes
+  become: yes
+  become_user: kube
+  shell: kubeadm token create --certificate-key {{ kubernetes_cert_key.stdout }} --print-join-command
+  register: kubernetes_join_master_command
+  when: inventory_hostname == groups['master'][0]
+
+- name: Add Token Master in Host dummy
+  add_host:
+    name: "K8S_TOKEN_MASTER"
+    token: "{{ kubernetes_join_master_command.stdout }}"
+  when: inventory_hostname == groups['master'][0]
+
+- name: Join master nodes
+  become: yes
+  shell: '{{ hostvars["K8S_TOKEN_MASTER"]["token"] }}'
+  when: inventory_hostname != groups['master'][0] and 
+        inventory_hostname in groups['master']
+
 - name: Get the token for joining the worker nodes
   become: yes
   become_user: kube
-  shell: kubeadm token create  --print-join-command
+  shell: kubeadm token create --print-join-command
   register: kubernetes_join_command
+  when: inventory_hostname == groups['master'][0]
 
-- name: Add Token in Host dummy
+- name: Add Token Worker in Host dummy
   add_host:
-    name: "K8S_TOKEN"
-    token: "{{ kubernetes_join_command.stdout }}"      
+    name: "K8S_TOKEN_WORKER"
+    token: "{{ kubernetes_join_command.stdout }}"
+  when: inventory_hostname == groups['master'][0]

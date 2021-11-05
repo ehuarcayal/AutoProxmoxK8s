@@ -4,7 +4,7 @@
   copy:
     dest: /tmp/kubernetes_join_command
     content: |
-      {{ hostvars['K8S_TOKEN']['token'] }}
+      {{ hostvars['K8S_TOKEN_WORKER']['token'] }}
     mode: 0777
 
 - name: Join the Worker nodes to the cluster.

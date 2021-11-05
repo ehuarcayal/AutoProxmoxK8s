@@ -44,6 +44,7 @@ export ANSIBLE_CONFIG=/media/Repositorios/AutoProxmoxK8s/ansible/ansible.cfg
 ansible-playbook -i inventory/hosts.ini cluster.yml
 ansible-playbook -i inventory/hosts.ini test.yml
 scp -i /media/erickrog/DATOS/Programas/Automatizacion/AutoProxmoxK8s/terraform/.ssh/id_rsa ubuntu@192.168.3.129:/home/kube/.kube/config ~/.kube/config
+scp -i /home/server/AutoProxmoxK8s/terraform/.ssh/id_rsa ubuntu@192.168.3.129:/home/kube/.kube/config ~/.kube/config
 
 scp "/media/erickrog/DATOS/Maquinas Virtuales/osx_BigSur/OSX-KVM/OpenCore-Catalina/OpenCore.qcow2" root@192.168.3.99:/var/lib/macos/images/
 scp "/media/erickrog/DATOS/Maquinas Virtuales/osx_BigSur/OSX-KVM/mac_hdd_ng.img" root@192.168.3.99:/var/lib/macos/images/
@@ -76,8 +77,10 @@ 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
 
 ssh -i /media/Repositorios/AutoProxmoxK8s/terraform/.ssh/id_rsa ubuntu@192.168.3.128
 ssh -i /media/erickrog/DATOS/Programas/Automatizacion/AutoProxmoxK8s/terraform/.ssh/id_rsa ubuntu@192.168.3.129
-ssh -i /root/AutoProxmoxK8s/terraform/.ssh/id_rsa ubuntu@192.168.3.128
+ssh -i /home/server/AutoProxmoxK8s/terraform/.ssh/id_rsa ubuntu@192.168.3.129
 stat -c "%a %n" id_rsa
 
 https://tansanrao.com/kubernetes-ha-cluster-with-kubeadm/
 https://www.lisenet.com/2021/install-and-configure-a-multi-master-ha-kubernetes-cluster-with-kubeadm-haproxy-and-keepalived-on-centos-7/
+https://stackoverflow.com/questions/33896847/how-do-i-set-register-a-variable-to-persist-between-plays-in-ansible
+https://blog.scottlowe.org/2019/08/15/reconstructing-the-join-command-for-kubeadm/

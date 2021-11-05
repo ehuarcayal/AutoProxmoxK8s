@@ -31,7 +31,7 @@ variable "HAProxy" {
 variable "masters" {
   type = map
   default = {
-    "numInstancias"  = 1
+    "numInstancias"  = 2
     "cores" = 2
     "ram" = 4096
     "disco" = "15G"
