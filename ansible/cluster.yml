@@ -52,3 +52,9 @@
       when: "additional_features.metallb"
       run_once: yes
       tags: metallb
+
+    - name: "Ingress Controller"
+      include_role:
+        name: features/ingress
+      when: "additional_features.ingress"
+      run_once: yes

@@ -1,0 +1,3 @@
+---
+- name: Install Ingress Controller
+  include_tasks: "controllers/{{ ingress_controller_type }}.yml"

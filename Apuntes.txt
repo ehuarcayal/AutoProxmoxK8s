@@ -84,3 +84,5 @@ https://tansanrao.com/kubernetes-ha-cluster-with-kubeadm/
 https://www.lisenet.com/2021/install-and-configure-a-multi-master-ha-kubernetes-cluster-with-kubeadm-haproxy-and-keepalived-on-centos-7/
 https://stackoverflow.com/questions/33896847/how-do-i-set-register-a-variable-to-persist-between-plays-in-ansible
 https://blog.scottlowe.org/2019/08/15/reconstructing-the-join-command-for-kubeadm/
+Nginx-controller
+https://fabianlee.org/2021/09/13/kubernetes-k3s-with-multiple-metallb-endpoints-and-nginx-ingress-controllers/

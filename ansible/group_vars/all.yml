@@ -2,10 +2,10 @@
 kube_version: 1.20.1-00
 pod_network_cidr:  "10.244.0.0/16"
 
-#Runtime: containerd or crio or docker
+# Runtime: containerd or crio or docker
 runtime_type: containerd
 
-#CRIO Version
+# CRIO Version
 crio_version: "1.20"
 crio_os: "xUbuntu_20.04"
 
@@ -13,15 +13,29 @@ crio_os: "xUbuntu_20.04"
 additional_features:
   helm: false
   metallb: true
+  ingress: true
 
-# helm Variables
+# Helm Variables
 helm_version: "v2.17.0"
 
-# metalb Variables
+# Metalb Variables
 metallb_version: v0.10.3
 metallb_yaml_ns_url: "https://raw.githubusercontent.com/google/metallb/{{ metallb_version }}/manifests/namespace.yaml"
 metallb_yaml_url: "https://raw.githubusercontent.com/google/metallb/{{ metallb_version }}/manifests/metallb.yaml"
 metallb_address_space: 192.168.3.200-192.168.3.210
 
-# temporary directory used by additional features
+# Ingress Controller: nginx, kong
+ingress_controller_type: nginx
+
+# NGINX Configuration
+nginx_ingress:
+  version: "v1.0.4"
+  yml_url: "https://raw.githubusercontent.com/kubernetes/ingress-nginx/controller-{{ nginx_controller.version }}/deploy/static/provider/baremetal/deploy.yaml"
+
+# Kong Configuration
+kong_ingress:  
+  version: ""
+  yml_url: "https://bit.ly/k4k8s"
+
+# Temporary directory used by additional features
 tmp_dir: /tmp/kubeadm-ansible-files
