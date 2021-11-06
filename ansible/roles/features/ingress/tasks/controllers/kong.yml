@@ -8,7 +8,7 @@
   
 - name: "Apply Kong Ingress Controller"
   become_user: kube
-  shell: "kubectl create -f {{ kong_ingress.yml_url }}"
+  shell: "kubectl create -f {{ kong_ingress_url }}"
   tags: kong-ingress
 
 - name: "Clean-up"

@@ -8,9 +8,9 @@
 
 - name: "Download Deployment YML"
   get_url:
-    url: "{{ nginx_ingress.yml_url }}"
+    url: "{{ nginx_ingress_url }}"
     dest: "{{ tmp_dir }}/deploy.yaml"
-    mode: 0770
+    mode: 0777
   tags: nginx-ingress
 
 - name: "Change when Metallb is active"  

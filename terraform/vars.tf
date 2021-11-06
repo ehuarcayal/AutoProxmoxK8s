@@ -31,9 +31,9 @@ variable "HAProxy" {
 variable "masters" {
   type = map
   default = {
-    "numInstancias"  = 2
-    "cores" = 2
-    "ram" = 4096
+    "numInstancias"  = 1
+    "cores" = 4
+    "ram" = 8192
     "disco" = "15G"
     "plantilla" = "ubuntu-template"
     "user_host" = "ubuntu"

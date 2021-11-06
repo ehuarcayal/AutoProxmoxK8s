@@ -14,6 +14,7 @@ additional_features:
   helm: false
   metallb: true
   ingress: true
+  istio: true
 
 # Helm Variables
 helm_version: "v2.17.0"
@@ -28,14 +29,17 @@ metallb_address_space: 192.168.3.200-192.168.3.210
 ingress_controller_type: nginx
 
 # NGINX Configuration
-nginx_ingress:
-  version: "v1.0.4"
-  yml_url: "https://raw.githubusercontent.com/kubernetes/ingress-nginx/controller-{{ nginx_controller.version }}/deploy/static/provider/baremetal/deploy.yaml"
+nginx_ingress_version: v1.0.4
+nginx_ingress_url: "https://raw.githubusercontent.com/kubernetes/ingress-nginx/controller-{{ nginx_ingress_version }}/deploy/static/provider/baremetal/deploy.yaml"
 
-# Kong Configuration
-kong_ingress:  
-  version: ""
-  yml_url: "https://bit.ly/k4k8s"
+# Kong Configuration  
+kong_ingress_version: ""
+kong_ingress_url: "https://bit.ly/k4k8s"
+
+# Istio Configuration 
+istio_version: "1.11.4"
+istio_url: "https://istio.io/downloadIstio"
+
 
 # Temporary directory used by additional features
 tmp_dir: /tmp/kubeadm-ansible-files

@@ -86,3 +86,6 @@ https://stackoverflow.com/questions/33896847/how-do-i-set-register-a-variable-to
 https://blog.scottlowe.org/2019/08/15/reconstructing-the-join-command-for-kubeadm/
 Nginx-controller
 https://fabianlee.org/2021/09/13/kubernetes-k3s-with-multiple-metallb-endpoints-and-nginx-ingress-controllers/
+
+OKD 4.5 install
+https://itnext.io/guide-installing-an-okd-4-5-cluster-508a2631cbee

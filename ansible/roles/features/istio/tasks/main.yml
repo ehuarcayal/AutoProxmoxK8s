@@ -1,0 +1,34 @@
+---
+- name: "Create tmp directory"
+  file:
+    path: "{{ tmp_dir }}"
+    state: directory
+    mode: 0777
+  tags: istio
+
+- name: "Download Script Install Istio"  
+  become_user: kube 
+  get_url:
+    url: "{{ istio_url }}"
+    dest: "{{ tmp_dir }}/downloadIstioCandidate.sh"
+    mode: 0777
+  tags: istio
+
+- name: "Download Installer Istio" 
+  become_user: kube  
+  shell: "{{ tmp_dir }}/downloadIstioCandidate.sh ISTIO_VERSION={{ istio_version }}"
+  args:
+    chdir: "{{ tmp_dir }}"    
+  tags: istio
+
+- name: "Install Istio" 
+  become_user: kube 
+  shell: "{{ tmp_dir }}/istio-{{ istio_version }}/bin/istioctl install -y"  
+  tags: istio
+
+- name: "Clean-up"
+  file:
+    path: "{{ tmp_dir }}"
+    state: absent
+  ignore_errors: yes
+  tags: istio

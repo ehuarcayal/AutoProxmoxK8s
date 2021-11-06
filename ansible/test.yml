@@ -1,9 +1,9 @@
-- hosts: haproxy
-  remote_user: ubuntu
-  become: yes
-  become_method: sudo
-  become_user: root
+- hosts: master
   gather_facts: yes
-  connection: ssh
-  roles:
-    - role: haproxy
+  become: yes
+  tasks:
+    - name: "Istio"
+      include_role:
+        name: features/istio
+      when: "additional_features.istio"
+      run_once: yes
